@@ -1,0 +1,64 @@
+plugins {
+	id 'java'
+
+	id 'org.springframework.boot' version '2.7.7'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
+	// Asciidoctor
+	id 'org.asciidoctor.convert' version '1.5.8'
+}
+
+group = 'alex.toy.nmj'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Web
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Spring Boot Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Spring Data JPA + H2 database
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.h2database:h2'
+	// Spring Data Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// Spring Boot Validation: @Valid 관련 검증 어노테이션 기능 제공
+	// 추가 이유: Spring Boot 2.3 버전부터는 spring-boot-starter-web 의존성 내부에 있던 validation이 분리됨
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Spring REST Docs: Test 코드를 통해 API 명세서를 만들어주는 기능 제공
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	// Lombok: 어노테이션을 통해 보일러플레이트 코드를 줄여주는 라이브러리
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+}
+
+ext {
+	// Test 스니펫 문서들의 저장 위치를 설정합니다
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
+}
