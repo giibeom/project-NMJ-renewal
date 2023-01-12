@@ -1,11 +1,7 @@
-### 데이터베이스 ERD
-- https://www.erdcloud.com/d/uykGfNjFfDtZDvzpk
+# 놀(고) 먹(고) 자(고) - Renewal
 
-
-#### 1차 스프린트
-
-<img src="images/DB-ERD-Sprint1.png" width="100%" />
-
+### 기존 프로젝트
+- https://github.com/giibeom/project-NMJ
 
 <br>
 
@@ -23,7 +19,7 @@
 |   |   |-- issue-#883-user-update
 |   |   |-- issue-#884-user-delete
 |   |-- refactor
-|   |   |-- issue-#887-user-코드냄새지우기
+|   |   |-- issue-#887-user-refactoring
 ```
 
 #### Branch merge
@@ -48,3 +44,14 @@
 |   test   |             테스트 코드 작성              |         test(#3): 예약 실패 케이스를 추가한다         |
 |   docs   |               문서 수정                |         docs(#3): README에 ERD를 추가한다         |
 |  chore   | 빌드 업무, 패키지 매니저 수정 등 (소스 코드 외적인 작업) |            chore: PR 템플릿을 생성한다            |
+
+
+<br>
+
+### 데이터베이스 ERD
+- https://www.erdcloud.com/d/uykGfNjFfDtZDvzpk
+
+
+#### 1차 스프린트
+
+<img src="images/DB-ERD-Sprint1.png" width="100%" />
