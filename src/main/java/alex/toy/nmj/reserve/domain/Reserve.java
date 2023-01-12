@@ -1,6 +1,6 @@
 package alex.toy.nmj.reserve.domain;
 
-import alex.toy.nmj.common.domain.BaseTimeEntity;
+import alex.toy.nmj.common.domain.BaseEntity;
 import alex.toy.nmj.common.domain.StartEndTime;
 import alex.toy.nmj.store.domain.Store;
 import alex.toy.nmj.member.domain.Member;
@@ -26,27 +26,21 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "NMJ_RESERVE")
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class Reserve extends BaseTimeEntity {
+public class Reserve extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "reserve_id")
     private Long id;
 
-    @Column(name = "reserve_people_count",
-            nullable = false)
+    @Column(nullable = false)
     private int peopleCount;
 
-    @Column(name = "reserve_approve_status",
-            nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("false")
     private boolean approveStatus;
 
     @Embedded
-    @AttributeOverride(name = "startDate",
-            column = @Column(name = "reserve_start_date", nullable = false))
-    @AttributeOverride(name = "endDate",
-            column = @Column(name = "reserve_end_date", nullable = false))
     private StartEndTime startEndTime;
 
     @ManyToOne(fetch = LAZY)
@@ -65,5 +59,6 @@ public class Reserve extends BaseTimeEntity {
         this.startEndTime = startEndTime;
         this.member = member;
         this.store = store;
+        this.approveStatus = false;
     }
 }

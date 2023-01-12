@@ -1,7 +1,7 @@
 package alex.toy.nmj.store.domain;
 
 import alex.toy.nmj.common.domain.Address;
-import alex.toy.nmj.common.domain.BaseTimeEntity;
+import alex.toy.nmj.common.domain.BaseEntity;
 import alex.toy.nmj.common.domain.LatLng;
 import alex.toy.nmj.member.domain.Member;
 import lombok.Builder;
@@ -27,47 +27,38 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "NMJ_STORE")
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class Store extends BaseTimeEntity {
+public class Store extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "store_id")
     private Long id;
 
-    @Column(name = "store_name",
-            nullable = false,
-            length = 45)
+    @Column(nullable = false, length = 45)
     private String name;
 
-    @Column(name = "store_phone",
-            nullable = false,
-            length = 45)
+    @Column(nullable = false, length = 13)
     private String phone;
 
-    @Column(name = "store_hours",
-            nullable = false,
-            length = 50)
-    private String hours;
+    @Column(nullable = false, length = 11)
+    private String businessHours;
 
-    @Column(name = "store_description",
-            columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(STRING)
-    @Column(name = "store_type",
-            nullable = false,
-            length = 30)
+    @Column(nullable = false, length = 10)
     private StoreType type;
 
-    @Column(name = "store_ratings",
-            nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("0.0")
     private double ratings;
 
-    @Column(name = "store_rate_count",
-            nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("0")
     private int rateCount;
+
+    private Long mainImageId;
 
     @Embedded
     private Address address;
@@ -81,16 +72,19 @@ public class Store extends BaseTimeEntity {
 
     @Builder
     private Store(final Long id, final String name, final String phone,
-                  final String hours, final String description, final StoreType type,
-                  final Address address, final LatLng latLng, final Member member) {
+                  final String businessHours, final String description, final StoreType type,
+                  final Long mainImageId, final Address address, final LatLng latLng, final Member member) {
         this.id = id;
         this.name = name;
         this.phone = phone;
-        this.hours = hours;
+        this.businessHours = businessHours;
         this.description = description;
         this.type = type;
+        this.mainImageId = mainImageId;
         this.address = address;
         this.latLng = latLng;
         this.member = member;
+        this.rateCount = 0;
+        this.ratings = 0.0;
     }
 }

@@ -1,6 +1,6 @@
 package alex.toy.nmj.review.domain;
 
-import alex.toy.nmj.common.domain.BaseTimeEntity;
+import alex.toy.nmj.common.domain.BaseEntity;
 import alex.toy.nmj.store.domain.Store;
 import alex.toy.nmj.member.domain.Member;
 import lombok.Builder;
@@ -23,28 +23,24 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "NMJ_REVIEW")
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class Review extends BaseTimeEntity {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "review_id")
     private Long id;
 
-    @Column(name = "review_rate",
-            nullable = false)
+    @Column(nullable = false)
     private double rate;
 
-    @Column(name = "review_description",
-            columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "review_report_status",
-            nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("false")
     private boolean reportStatus;
 
-    @Column(name = "review_star_count",
-            nullable = false)
+    @Column(nullable = false)
     @ColumnDefault("0")
     private int starCount;
 
@@ -64,5 +60,7 @@ public class Review extends BaseTimeEntity {
         this.description = description;
         this.member = member;
         this.store = store;
+        this.reportStatus = false;
+        this.starCount = 0;
     }
 }

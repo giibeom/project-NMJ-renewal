@@ -1,6 +1,6 @@
 package alex.toy.nmj.csreqeust.domain;
 
-import alex.toy.nmj.common.domain.BaseTimeEntity;
+import alex.toy.nmj.common.domain.BaseEntity;
 import alex.toy.nmj.review.domain.Review;
 import alex.toy.nmj.store.domain.Store;
 import lombok.Builder;
@@ -24,7 +24,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "NMJ_CS_REQUEST")
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class CsRequest extends BaseTimeEntity {
+public class CsRequest extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -32,19 +32,14 @@ public class CsRequest extends BaseTimeEntity {
     private Long id;
 
     @Enumerated(STRING)
-    @Column(name = "cs_type",
-            nullable = false,
-            length = 45)
+    @Column(nullable = false, length = 20)
     private CsType type;
 
-    @Column(name = "cs_description",
-            columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(STRING)
-    @Column(name = "cs_status",
-            nullable = false,
-            length = 45)
+    @Column(nullable = false, length = 20)
     private CsStatus status;
 
     @OneToOne(fetch = LAZY)

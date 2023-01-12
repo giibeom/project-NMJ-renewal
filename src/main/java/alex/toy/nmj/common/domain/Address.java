@@ -13,14 +13,10 @@ import java.util.Objects;
 @Getter
 public class Address {
 
-    @Column(name = "road_name_address",
-            nullable = false,
-            length = 200)
+    @Column(name = "road_name_address", nullable = false, length = 200)
     private String roadName;
 
-    @Column(name = "detail_address",
-            nullable = false,
-            length = 200)
+    @Column(name = "detail_address", nullable = false, length = 200)
     private String detail;
 
     public Address(final String roadName, final String detail) {

@@ -14,10 +14,10 @@ import java.util.Objects;
 @Getter
 public class StartEndTime {
 
-    @Column(name = "start_date")
+    @Column(nullable = false)
     private LocalDateTime startDate;
 
-    @Column(name = "end_date")
+    @Column(nullable = false)
     private LocalDateTime endDate;
 
     @Override

@@ -1,6 +1,7 @@
 package alex.toy.nmj.store.domain;
 
-import alex.toy.nmj.common.domain.BaseTimeEntity;
+import alex.toy.nmj.common.domain.BaseEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -20,28 +21,29 @@ import static lombok.AccessLevel.PROTECTED;
 @Table(name = "NMJ_STORE_IMAGE")
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class StoreImage extends BaseTimeEntity {
+public class StoreImage extends BaseEntity {
 
     @Id
     @GeneratedValue
     @Column(name = "image_id")
     private Long id;
 
-    @Column(name = "image_name",
-            length = 50)
+    @Column(length = 50)
     private String name;
 
-    @Column(name = "image_path",
-            nullable = false,
-            length = 200)
+    @Column(nullable = false, length = 200)
     private String path;
-
-    @Column(name = "image_representative_status",
-            nullable = false)
-    @ColumnDefault("false")
-    private boolean representativeStatus;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
+
+    @Builder
+    private StoreImage(final Long id, final String name,
+                       final String path, final Store store) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.store = store;
+    }
 }
