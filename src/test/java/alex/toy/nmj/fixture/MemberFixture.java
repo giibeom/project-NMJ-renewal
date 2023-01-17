@@ -2,6 +2,7 @@ package alex.toy.nmj.fixture;
 
 import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberType;
+import alex.toy.nmj.member.presentation.dto.request.MemberCreateRequestDto;
 
 public enum MemberFixture {
     일반_회원_giibeom("dev.gibeom@gmail.com", "비밀번호486",
@@ -29,6 +30,16 @@ public enum MemberFixture {
         return Member.builder()
                 .email(this.email)
                 .password(this.password) // TODO : 암호화 진행 (시큐리티)
+                .name(this.name)
+                .phone(this.phone)
+                .type(this.type)
+                .build();
+    }
+
+    public MemberCreateRequestDto 등록_요청_데이터_생성() {
+        return MemberCreateRequestDto.builder()
+                .email(this.email)
+                .password(this.password)
                 .name(this.name)
                 .phone(this.phone)
                 .type(this.type)
