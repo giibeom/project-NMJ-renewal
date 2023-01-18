@@ -24,6 +24,7 @@ import static alex.toy.nmj.fixture.MemberFixture.회원_이름_비정상;
 import static alex.toy.nmj.fixture.MemberFixture.회원_이메일_비정상;
 import static alex.toy.nmj.fixture.MemberFixture.회원_전화번호_비정상;
 import static alex.toy.nmj.fixture.MemberFixture.회원_타입_비정상;
+import static alex.toy.nmj.fixture.MemberFixture.회원_타입_소문자;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -82,28 +83,44 @@ class MemberControllerTest extends PresentationTest {
         }
 
         @Nested
-        @DisplayName("중복된 아이디 계정이 주어지면")
-        class Context_with_duplicate_email {
-
-            @BeforeEach
-            void setUp() {
-                memberService.saveMember(일반_회원_gibeom.등록_요청_DTO_생성());
-            }
+        @DisplayName("유효한 회원 타입이 소문자로 주어지면")
+        class Context_with_type_small_letter {
 
             @Test
-            @DisplayName("409 코드로 응답한다")
-            void it_responses_409() throws Exception {
+            @DisplayName("201 상태 코드와 회원 정보를 리턴한다")
+            void it_returns_member() throws Exception {
                 ResultActions perform = mockMvc.perform(
-                        회원_등록_API_수정(일반_회원_gibeom)
+                        회원_등록_API_수정(회원_타입_소문자)
                 );
 
-                perform.andExpect(status().isConflict());
+                perform.andExpect(status().isCreated());
+                perform.andExpect(content().string(containsString(회원_타입_소문자.이메일())));
             }
         }
 
         @Nested
         @DisplayName("유효하지 않은 회원 정보가 주어지면")
         class Context_with_request_null_data {
+
+            @Nested
+            @DisplayName("중복된 아이디 계정일 경우")
+            class Context_with_duplicate_email {
+
+                @BeforeEach
+                void setUp() {
+                    memberService.saveMember(일반_회원_gibeom.등록_요청_DTO_생성());
+                }
+
+                @Test
+                @DisplayName("409 코드로 응답한다")
+                void it_responses_409() throws Exception {
+                    ResultActions perform = mockMvc.perform(
+                            회원_등록_API_수정(일반_회원_gibeom)
+                    );
+
+                    perform.andExpect(status().isConflict());
+                }
+            }
 
             @Nested
             @DisplayName("이메일이 공백일 경우")
