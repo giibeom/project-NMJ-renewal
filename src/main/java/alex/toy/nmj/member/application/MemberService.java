@@ -3,6 +3,7 @@ package alex.toy.nmj.member.application;
 import alex.toy.nmj.member.application.command.MemberCreateRequest;
 import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberRepository;
+import alex.toy.nmj.member.exception.DuplicatedMemberEmailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,17 @@ public class MemberService {
     }
 
     @Transactional
-    public Member saveMember(MemberCreateRequest memberCreateRequest) {
+    public Member saveMember(final MemberCreateRequest memberCreateRequest) {
         Member member = memberCreateRequest.toEntity();
 
-        // TODO: 중복된 EMAIL인지 검증
+        if (isAlreadyExistEmail(member)) {
+            throw new DuplicatedMemberEmailException();
+        }
 
         return memberRepository.save(member);
+    }
+
+    private boolean isAlreadyExistEmail(final Member member) {
+        return memberRepository.existsByEmail(member.getEmail());
     }
 }
