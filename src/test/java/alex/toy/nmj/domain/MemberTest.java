@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static alex.toy.nmj.fixture.MemberFixture.관리자_회원_기범;
 import static alex.toy.nmj.fixture.MemberFixture.매장_회원_Alex;
-import static alex.toy.nmj.fixture.MemberFixture.일반_회원_giibeom;
+import static alex.toy.nmj.fixture.MemberFixture.일반_회원_gibeom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Member 테스트")
@@ -29,7 +29,7 @@ class MemberTest {
 
             @BeforeEach
             void setUp() {
-                일반_회원 = 일반_회원_giibeom.엔티티_생성();
+                일반_회원 = 일반_회원_gibeom.엔티티_생성();
             }
 
             @Test

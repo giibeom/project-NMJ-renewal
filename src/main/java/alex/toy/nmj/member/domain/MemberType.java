@@ -1,6 +1,6 @@
 package alex.toy.nmj.member.domain;
 
-import alex.toy.nmj.common.exception.InvalidMemberTypeException;
+import alex.toy.nmj.member.exception.InvalidMemberTypeException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.Arrays;
