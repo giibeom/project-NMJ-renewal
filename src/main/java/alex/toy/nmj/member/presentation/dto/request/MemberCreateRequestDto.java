@@ -4,13 +4,11 @@ import alex.toy.nmj.member.application.command.MemberCreateRequest;
 import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberType;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
 @Getter
-@EqualsAndHashCode
 public class MemberCreateRequestDto implements MemberCreateRequest {
 
     @NotBlank(message = "이메일을 입력하세요")

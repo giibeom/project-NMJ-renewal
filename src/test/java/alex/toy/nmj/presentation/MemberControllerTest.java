@@ -3,6 +3,7 @@ package alex.toy.nmj.presentation;
 import alex.toy.nmj.common.util.JsonUtil;
 import alex.toy.nmj.fixture.MemberFixture;
 import alex.toy.nmj.member.application.MemberService;
+import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.io.IOException;
 
 import static alex.toy.nmj.fixture.MemberFixture.매장_회원_Alex;
+import static alex.toy.nmj.fixture.MemberFixture.일반_회원_beom;
 import static alex.toy.nmj.fixture.MemberFixture.일반_회원_gibeom;
 import static alex.toy.nmj.fixture.MemberFixture.회원_비밀번호_비정상;
 import static alex.toy.nmj.fixture.MemberFixture.회원_이름_비정상;
@@ -27,6 +29,7 @@ import static alex.toy.nmj.fixture.MemberFixture.회원_타입_비정상;
 import static alex.toy.nmj.fixture.MemberFixture.회원_타입_소문자;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -108,7 +111,7 @@ class MemberControllerTest extends PresentationTest {
 
                 @BeforeEach
                 void setUp() {
-                    memberService.saveMember(일반_회원_gibeom.등록_요청_DTO_생성());
+                    memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
                 }
 
                 @Test
@@ -195,6 +198,41 @@ class MemberControllerTest extends PresentationTest {
 
                     perform.andExpect(status().isBadRequest());
                 }
+            }
+        }
+    }
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_수정_API는 {
+
+        @Nested
+        @DisplayName("유효한 회원 수정 정보가 주어지면")
+        class Context_with_valid_update_data {
+
+            private Member 기존_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                기존_회원_정보 = memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
+            }
+
+            @Test
+            @DisplayName("회원 정보를 수정하고 200 상태 코드와 회원 정보를 리턴한다")
+            void it_returns_member() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        patch(REQUEST_MEMBER_URL + "/" + 기존_회원_정보.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(JsonUtil.writeValueAsString(일반_회원_beom.수정_요청_데이터_생성()))
+                );
+
+                perform.andExpect(status().isOk());
+                perform.andExpect(content().string(not(containsString("password"))));
+                perform.andExpect(content().string(containsString(일반_회원_gibeom.이메일())));
+                perform.andExpect(content().string(containsString(일반_회원_beom.이름())));
+                perform.andExpect(content().string(containsString(일반_회원_beom.전화번호())));
+
+                perform.andDo(print());
             }
         }
     }

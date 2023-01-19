@@ -11,7 +11,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
@@ -49,16 +48,15 @@ public class Member extends BaseEntity {
     private MemberStatus status;
 
     @Builder
-    private Member(final Long id, final String email, final String password, final String name,
-                   final String phone, final MemberType type, final MemberStatus status) {
-
+    private Member(final Long id, final String email, final String password,
+                   final String name, final String phone, final MemberType type) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phone = phone;
         this.type = type;
-        changeStatus();
+        createStatus();
     }
 
     public boolean isUser() {
@@ -73,7 +71,39 @@ public class Member extends BaseEntity {
         return MemberType.ADMIN == this.type;
     }
 
-    private void changeStatus() {
+    public boolean isWaitingJoin() {
+        return MemberStatus.WAIT == this.status;
+    }
+
+    public boolean isDeleted() {
+        return MemberStatus.DELETED == this.status;
+    }
+
+    public void update(final Member member) {
+        updatePassword(member.getPassword());
+        updateName(member.getName());
+        updatePhone(member.getPhone());
+    }
+
+    private void updatePassword(final String password) {
+        if (password != null && !password.isBlank()) {
+            this.password = password;
+        }
+    }
+
+    private void updateName(final String name) {
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        }
+    }
+
+    private void updatePhone(final String phone) {
+        if (phone != null && !phone.isBlank()) {
+            this.phone = phone;
+        }
+    }
+
+    private void createStatus() {
         if (isUser()) {
             this.status = MemberStatus.NORMAL;
         }
