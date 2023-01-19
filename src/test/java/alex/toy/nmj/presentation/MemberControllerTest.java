@@ -6,6 +6,7 @@ import alex.toy.nmj.member.application.MemberService;
 import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -53,7 +54,7 @@ class MemberControllerTest extends PresentationTest {
             @DisplayName("회원 상태를 일반으로 저장하고 201 상태 코드와 회원 정보를 리턴한다")
             void it_returns_member() throws Exception {
                 ResultActions perform = mockMvc.perform(
-                        회원_등록_API_수정(일반_회원_gibeom)
+                        회원_등록_API_요청(일반_회원_gibeom)
                 );
 
                 perform.andExpect(status().isCreated());
@@ -73,7 +74,7 @@ class MemberControllerTest extends PresentationTest {
             @DisplayName("회원 상태를 대기로 저장하고 201 상태 코드와 회원 정보를 리턴한다")
             void it_returns_member() throws Exception {
                 ResultActions perform = mockMvc.perform(
-                        회원_등록_API_수정(매장_회원_Alex)
+                        회원_등록_API_요청(매장_회원_Alex)
                 );
 
                 perform.andExpect(status().isCreated());
@@ -93,7 +94,7 @@ class MemberControllerTest extends PresentationTest {
             @DisplayName("201 상태 코드와 회원 정보를 리턴한다")
             void it_returns_member() throws Exception {
                 ResultActions perform = mockMvc.perform(
-                        회원_등록_API_수정(회원_타입_소문자)
+                        회원_등록_API_요청(회원_타입_소문자)
                 );
 
                 perform.andExpect(status().isCreated());
@@ -118,7 +119,7 @@ class MemberControllerTest extends PresentationTest {
                 @DisplayName("409 코드로 응답한다")
                 void it_responses_409() throws Exception {
                     ResultActions perform = mockMvc.perform(
-                            회원_등록_API_수정(일반_회원_gibeom)
+                            회원_등록_API_요청(일반_회원_gibeom)
                     );
 
                     perform.andExpect(status().isConflict());
@@ -133,7 +134,7 @@ class MemberControllerTest extends PresentationTest {
                 @DisplayName("400 코드로 응답한다")
                 void it_responses_400() throws Exception {
                     ResultActions perform = mockMvc.perform(
-                            회원_등록_API_수정(회원_이메일_비정상)
+                            회원_등록_API_요청(회원_이메일_비정상)
                     );
 
                     perform.andExpect(status().isBadRequest());
@@ -148,7 +149,7 @@ class MemberControllerTest extends PresentationTest {
                 @DisplayName("400 코드로 응답한다")
                 void it_responses_400() throws Exception {
                     ResultActions perform = mockMvc.perform(
-                            회원_등록_API_수정(회원_비밀번호_비정상)
+                            회원_등록_API_요청(회원_비밀번호_비정상)
                     );
 
                     perform.andExpect(status().isBadRequest());
@@ -163,7 +164,7 @@ class MemberControllerTest extends PresentationTest {
                 @DisplayName("400 코드로 응답한다")
                 void it_responses_400() throws Exception {
                     ResultActions perform = mockMvc.perform(
-                            회원_등록_API_수정(회원_전화번호_비정상)
+                            회원_등록_API_요청(회원_전화번호_비정상)
                     );
 
                     perform.andExpect(status().isBadRequest());
@@ -178,7 +179,7 @@ class MemberControllerTest extends PresentationTest {
                 @DisplayName("400 코드로 응답한다")
                 void it_responses_400() throws Exception {
                     ResultActions perform = mockMvc.perform(
-                            회원_등록_API_수정(회원_이름_비정상)
+                            회원_등록_API_요청(회원_이름_비정상)
                     );
 
                     perform.andExpect(status().isBadRequest());
@@ -193,7 +194,7 @@ class MemberControllerTest extends PresentationTest {
                 @DisplayName("400 코드로 응답한다")
                 void it_responses_400() throws Exception {
                     ResultActions perform = mockMvc.perform(
-                            회원_등록_API_수정(회원_타입_비정상)
+                            회원_등록_API_요청(회원_타입_비정상)
                     );
 
                     perform.andExpect(status().isBadRequest());
@@ -221,9 +222,7 @@ class MemberControllerTest extends PresentationTest {
             @DisplayName("회원 정보를 수정하고 200 상태 코드와 회원 정보를 리턴한다")
             void it_returns_member() throws Exception {
                 ResultActions perform = mockMvc.perform(
-                        patch(REQUEST_MEMBER_URL + "/" + 기존_회원_정보.getId())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(JsonUtil.writeValueAsString(일반_회원_beom.수정_요청_데이터_생성()))
+                        회원_수정_API_요청(기존_회원_정보.getId(), 일반_회원_beom)
                 );
 
                 perform.andExpect(status().isOk());
@@ -235,12 +234,80 @@ class MemberControllerTest extends PresentationTest {
                 perform.andDo(print());
             }
         }
+
+        @Nested
+        @DisplayName("찾을 수 없는 회원 id가 주어지면")
+        class Context_with_not_found_member_id {
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        회원_수정_API_요청(Long.MAX_VALUE, 일반_회원_beom)
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
+
+        @Nested
+        @DisplayName("회원 상태가 가입 대기일 경우")
+        class Context_with_member_status_wait {
+
+            private Member 매장_가입_대기_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                매장_가입_대기_회원_정보 = memberService.save(매장_회원_Alex.등록_요청_DTO_생성());
+            }
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        회원_수정_API_요청(매장_가입_대기_회원_정보.getId(), 일반_회원_beom)
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
+
+        @Nested
+        @DisplayName("삭제된 회원일 경우")
+        class Context_with_member_status_deleted {
+
+            private Member 삭제된_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                삭제된_회원_정보 = memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
+
+                // TODO : delete 메서드
+            }
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            @Disabled("삭제 기능 개발 후 disabled 해제 예정")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        회원_수정_API_요청(삭제된_회원_정보.getId(), 일반_회원_beom)
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
     }
 
-    private static MockHttpServletRequestBuilder 회원_등록_API_수정(MemberFixture memberFixture) throws IOException {
+    private MockHttpServletRequestBuilder 회원_등록_API_요청(MemberFixture memberFixture) throws IOException {
         return post(REQUEST_MEMBER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValueAsString(memberFixture.등록_요청_데이터_생성()));
+    }
+
+    private MockHttpServletRequestBuilder 회원_수정_API_요청(Long memberId, MemberFixture memberFixture) throws IOException {
+        return patch(REQUEST_MEMBER_URL + "/" + memberId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValueAsString(memberFixture.수정_요청_데이터_생성()));
     }
 
     private void Member_이메일_이름_전화번호_회원타입_검증(ResultActions perform, MemberFixture memberFixture) throws Exception {
