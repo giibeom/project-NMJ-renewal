@@ -101,5 +101,20 @@ class MemberTest {
                 assertThat(기존_회원_정보.getPhone()).isEqualTo(변경할_회원_정보.getPhone());
             }
         }
+
+        @Nested
+        @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+        class 회원_정보_삭제_시 {
+
+            private Member 기존_회원_정보 = 일반_회원_gibeom.엔티티_생성();
+
+            @Test
+            @DisplayName("회원 상태값이 DELETED로 수정된다")
+            void it_change_member_status_deleted() throws Exception {
+                기존_회원_정보.delete();
+
+                assertThat(기존_회원_정보.isDeleted()).isTrue();
+            }
+        }
     }
 }

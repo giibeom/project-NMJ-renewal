@@ -85,6 +85,10 @@ public class Member extends BaseEntity {
         updatePhone(member.getPhone());
     }
 
+    public void delete() {
+        this.status = MemberStatus.DELETED;
+    }
+
     private void updatePassword(final String password) {
         if (password != null && !password.isBlank()) {
             this.password = password;

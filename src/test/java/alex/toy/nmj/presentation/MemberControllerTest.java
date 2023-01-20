@@ -30,6 +30,7 @@ import static alex.toy.nmj.fixture.MemberFixture.회원_타입_비정상;
 import static alex.toy.nmj.fixture.MemberFixture.회원_타입_소문자;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -294,6 +295,33 @@ class MemberControllerTest extends PresentationTest {
                 );
 
                 perform.andExpect(status().isNotFound());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_삭제_API는 {
+
+        @Nested
+        @DisplayName("회원 상태가 정상인 찾을 수 있는 회원 id가 주어지면")
+        class Context_with_valid_member_id {
+
+            private Member 기존_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                기존_회원_정보 = memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
+            }
+
+            @Test
+            @DisplayName("204 코드로 응답한다")
+            void it_responses_204() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        delete(REQUEST_MEMBER_URL + "/" + 기존_회원_정보.getId())
+                );
+
+                perform.andExpect(status().isNoContent());
             }
         }
     }
