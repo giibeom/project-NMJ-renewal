@@ -324,6 +324,67 @@ class MemberControllerTest extends PresentationTest {
                 perform.andExpect(status().isNoContent());
             }
         }
+
+        @Nested
+        @DisplayName("찾을 수 없는 회원 id가 주어지면")
+        class Context_with_not_found_member_id {
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        delete(REQUEST_MEMBER_URL + "/" + Long.MAX_VALUE)
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
+
+        @Nested
+        @DisplayName("회원 상태가 가입 대기일 경우")
+        class Context_with_member_status_wait {
+
+            private Member 매장_가입_대기_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                매장_가입_대기_회원_정보 = memberService.save(매장_회원_Alex.등록_요청_DTO_생성());
+            }
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        delete(REQUEST_MEMBER_URL + "/" + 매장_가입_대기_회원_정보.getId())
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
+
+        @Nested
+        @DisplayName("삭제된 회원일 경우")
+        class Context_with_member_status_deleted {
+
+            private Member 삭제된_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                삭제된_회원_정보 = memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
+
+                memberService.delete(삭제된_회원_정보.getId());
+            }
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        delete(REQUEST_MEMBER_URL + "/" + 삭제된_회원_정보.getId())
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
     }
 
     private MockHttpServletRequestBuilder 회원_등록_API_요청(MemberFixture memberFixture) throws IOException {

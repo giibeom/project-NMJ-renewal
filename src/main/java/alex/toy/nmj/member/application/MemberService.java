@@ -30,6 +30,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional
     public Member update(final Long memberId, final MemberUpdateRequest memberUpdateRequest) {
         Member member = findMemberById(memberId);
 
@@ -42,6 +43,7 @@ public class MemberService {
         return member;
     }
 
+    @Transactional
     public void delete(final Long memberId) {
         Member member = findMemberById(memberId);
 
