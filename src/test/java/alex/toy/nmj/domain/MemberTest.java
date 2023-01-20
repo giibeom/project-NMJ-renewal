@@ -75,4 +75,46 @@ class MemberTest {
             }
         }
     }
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_정보_수정_시 {
+
+        @Nested
+        @DisplayName("변경할 컬럼 값이 주어지면")
+        class Context_with_change_data {
+
+            private Member 기존_회원_정보 = 일반_회원_gibeom.엔티티_생성();
+            private Member 변경할_회원_정보 = Member.builder()
+                    .name("이름 바꿀꺼지롱")
+                    .phone("010-0000-0000")
+                    .build();
+
+            @Test
+            @DisplayName("값이 있는 컬럼만 수정된다")
+            void it_change_not_blank() throws Exception {
+
+                기존_회원_정보.update(변경할_회원_정보);
+
+                assertThat(기존_회원_정보.getPassword()).isEqualTo(기존_회원_정보.getPassword());
+                assertThat(기존_회원_정보.getName()).isEqualTo(변경할_회원_정보.getName());
+                assertThat(기존_회원_정보.getPhone()).isEqualTo(변경할_회원_정보.getPhone());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_정보_삭제_시 {
+
+        private Member 기존_회원_정보 = 일반_회원_gibeom.엔티티_생성();
+
+        @Test
+        @DisplayName("회원 상태값이 DELETED로 수정된다")
+        void it_change_member_status_deleted() throws Exception {
+            기존_회원_정보.delete();
+
+            assertThat(기존_회원_정보.isDeleted()).isTrue();
+        }
+    }
 }
