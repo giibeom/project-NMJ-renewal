@@ -283,12 +283,11 @@ class MemberControllerTest extends PresentationTest {
             void setUp() {
                 삭제된_회원_정보 = memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
 
-                // TODO : delete 메서드
+                memberService.delete(삭제된_회원_정보.getId());
             }
 
             @Test
             @DisplayName("404 코드로 응답한다")
-            @Disabled("삭제 기능 개발 후 disabled 해제 예정")
             void it_responses_404() throws Exception {
                 ResultActions perform = mockMvc.perform(
                         회원_수정_API_요청(삭제된_회원_정보.getId(), 일반_회원_beom)
