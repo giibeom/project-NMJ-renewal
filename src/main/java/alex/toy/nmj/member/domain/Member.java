@@ -79,6 +79,14 @@ public class Member extends BaseEntity {
         return MemberStatus.DELETED == this.status;
     }
 
+    public boolean isUnmodifiableMemberStatus() {
+        return this.isWaitingJoin() || this.isDeleted();
+    }
+
+    public boolean isUndeletableMemberStatus() {
+        return this.isWaitingJoin() || this.isDeleted();
+    }
+
     public void update(final Member member) {
         updatePassword(member.getPassword());
         updateName(member.getName());

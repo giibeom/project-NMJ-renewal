@@ -34,7 +34,7 @@ public class MemberService {
     public Member update(final Long memberId, final MemberUpdateRequest memberUpdateRequest) {
         Member member = findMemberById(memberId);
 
-        if (isUnmodifiableMemberStatus(member)) {
+        if (member.isUnmodifiableMemberStatus()) {
             throw new MemberNotFoundException();
         }
 
@@ -47,7 +47,7 @@ public class MemberService {
     public void delete(final Long memberId) {
         Member member = findMemberById(memberId);
 
-        if (isUndeletableMemberStatus(member)) {
+        if (member.isUndeletableMemberStatus()) {
             throw new MemberNotFoundException();
         }
 
@@ -61,13 +61,5 @@ public class MemberService {
 
     private boolean isAlreadyExistEmail(final Member member) {
         return memberRepository.existsByEmail(member.getEmail());
-    }
-
-    private boolean isUnmodifiableMemberStatus(Member member) {
-        return member.isWaitingJoin() || member.isDeleted();
-    }
-
-    private boolean isUndeletableMemberStatus(Member member) {
-        return member.isWaitingJoin() || member.isDeleted();
     }
 }
