@@ -1,8 +1,8 @@
 ---
-name: Refactoring request
-about: 코드 리팩토링 및 성능 개선 요청
-title: "[Refactor]"
-labels: "♻️ refactoring"
+name: Feature request
+about: 기능 추가 및 개선 요청
+title: "[Feature]"
+labels: "✨ feature, \U0001F9EA test_code"
 assignees: ''
 
 ---
@@ -25,5 +25,4 @@ assignees: ''
   (ex. 상품 페이지 사진)
 
 ## 예상 소요 시간
-
 -
