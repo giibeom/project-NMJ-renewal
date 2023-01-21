@@ -19,6 +19,10 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    public Member findById(final Long memberId) {
+        return findMemberById(memberId);
+    }
+
     @Transactional
     public Member save(final MemberCreateRequest memberCreateRequest) {
         Member member = memberCreateRequest.toEntity();

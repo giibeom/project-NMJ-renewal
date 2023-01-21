@@ -6,7 +6,6 @@ import alex.toy.nmj.member.application.MemberService;
 import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -31,6 +30,7 @@ import static alex.toy.nmj.fixture.MemberFixture.회원_타입_소문자;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -385,6 +385,96 @@ class MemberControllerTest extends PresentationTest {
             }
         }
     }
+
+    @Nested
+    @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+    class 회원_상세_조회_API는 {
+
+        @Nested
+        @DisplayName("찾을 수 있는 id가 주어지면")
+        class Context_with_valid_id {
+
+            private Member 기존_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                기존_회원_정보 = memberService.save(일반_회원_gibeom.등록_요청_DTO_생성());
+            }
+
+            @Test
+            @DisplayName("200 상태 코드와 회원 정보를 리턴한다")
+            void it_returns_member() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        get(REQUEST_MEMBER_URL + "/" + 기존_회원_정보.getId())
+                );
+
+                perform.andExpect(status().isOk());
+                perform.andExpect(content().string(not(containsString("password"))));
+                Member_이메일_이름_전화번호_회원타입_검증(perform, 일반_회원_gibeom);
+            }
+        }
+
+        @Nested
+        @DisplayName("회원 상태가 가입 대기인 id가 주어지면")
+        class Context_with_wait_join_id {
+
+            private Member 가입_대기중인_매장_회원;
+
+            @BeforeEach
+            void setUp() {
+                가입_대기중인_매장_회원 = memberService.save(매장_회원_Alex.등록_요청_DTO_생성());
+            }
+
+            @Test
+            @DisplayName("200 상태 코드와 회원 정보를 리턴한다")
+            void it_returns_member() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        get(REQUEST_MEMBER_URL + "/" + 가입_대기중인_매장_회원.getId())
+                );
+
+                perform.andExpect(status().isOk());
+            }
+        }
+
+        @Nested
+        @DisplayName("삭제된 회원 id가 주어지면")
+        class Context_with_deleted_id {
+
+            private Member 삭제된_회원_정보;
+
+            @BeforeEach
+            void setUp() {
+                삭제된_회원_정보 = memberService.save(일반_회원_beom.등록_요청_DTO_생성());
+                삭제된_회원_정보.delete();
+            }
+
+            @Test
+            @DisplayName("200 상태 코드와 회원 정보를 리턴한다")
+            void it_returns_member() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        get(REQUEST_MEMBER_URL + "/" + 삭제된_회원_정보.getId())
+                );
+
+                perform.andExpect(status().isOk());
+            }
+        }
+
+        @Nested
+        @DisplayName("찾을 수 없는 id가 주어지면")
+        class Context_with_not_found_id {
+
+            @Test
+            @DisplayName("404 코드로 응답한다")
+            void it_responses_404() throws Exception {
+                ResultActions perform = mockMvc.perform(
+                        get(REQUEST_MEMBER_URL + "/" + Long.MAX_VALUE)
+                );
+
+                perform.andExpect(status().isNotFound());
+            }
+        }
+    }
+
 
     private MockHttpServletRequestBuilder 회원_등록_API_요청(MemberFixture memberFixture) throws IOException {
         return post(REQUEST_MEMBER_URL)
