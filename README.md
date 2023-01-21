@@ -1,7 +1,10 @@
 # 놀(고) 먹(고) 자(고) - Renewal
 
-### 기존 프로젝트
-- https://github.com/giibeom/project-NMJ
+### 개요
+개발을 처음 배운 IT 학원에서 팀장을 맡으며 5명의 팀원들과 함께 개발했던 놀먹자라는 자리예약 서비스 프로젝트입니다. <br>
+2년 간 쌓았던 실무 경험과, 최근 학습한 JPA와 TestCode를 적용해보며 정리하기 위해 기존 프로젝트를 새로 만들어봅니다.
+- 기존 프로젝트: https://github.com/giibeom/project-NMJ 
+
 
 <br>
 
