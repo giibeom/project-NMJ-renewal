@@ -4,9 +4,11 @@ import alex.toy.nmj.member.application.MemberService;
 import alex.toy.nmj.member.presentation.dto.request.MemberCreateRequestDto;
 import alex.toy.nmj.member.presentation.dto.request.MemberUpdateRequestDto;
 import alex.toy.nmj.member.presentation.dto.response.MemberCreateResponse;
+import alex.toy.nmj.member.presentation.dto.response.MemberResponse;
 import alex.toy.nmj.member.presentation.dto.response.MemberUpdateResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,5 +45,10 @@ public class MemberController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final Long memberId) {
         memberService.delete(memberId);
+    }
+
+    @GetMapping("/{memberId}")
+    public MemberResponse detail(@PathVariable final Long memberId) {
+        return new MemberResponse(memberService.findById(memberId));
     }
 }

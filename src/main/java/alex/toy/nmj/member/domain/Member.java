@@ -27,7 +27,7 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String email;
 
     @Column(nullable = false, length = 70)
@@ -59,35 +59,87 @@ public class Member extends BaseEntity {
         createStatus();
     }
 
+    /**
+     * 회원 타입이 일반 회원인지 확인합니다.
+     * 
+     * @return 일반 회원 여부
+     */
     public boolean isUser() {
         return MemberType.USER == this.type;
     }
 
+    /**
+     * 회원 타입이 매장 회원인지 확입합니다.
+     * 
+     * @return 매장 회원 여부
+     */
     public boolean isStore() {
         return MemberType.STORE == this.type;
     }
 
+    /**
+     * 회원 타입이 관리자 회원인지 확인합니다.
+     * 
+     * @return 관리자 회원 여부
+     */
     public boolean isAdmin() {
         return MemberType.ADMIN == this.type;
     }
 
+    /**
+     * 회원 상태가 가입 대기 상태인지 확인합니다.
+     * 
+     * @return 가입 대기 상태 여부
+     */
     public boolean isWaitingJoin() {
         return MemberStatus.WAIT == this.status;
     }
 
+    /**
+     * 회원 상태가 삭제된 상태인지 확인합니다.
+     * 
+     * @return 삭제 상태 여부
+     */
     public boolean isDeleted() {
         return MemberStatus.DELETED == this.status;
     }
 
+    /**
+     * 회원 상태가 수정 가능한 상태인지 확인합니다.
+     *
+     * @return 수정 가능 여부
+     */
+    public boolean isUnmodifiableMemberStatus() {
+        return this.isWaitingJoin() || this.isDeleted();
+    }
+
+    /**
+     * 회원 상태가 삭제 가능한 상태인지 확인합니다.
+     *
+     * @return 삭제 가능 여부
+     */
+    public boolean isUndeletableMemberStatus() {
+        return this.isWaitingJoin() || this.isDeleted();
+    }
+
+    /**
+     * 회원 정보를 수정합니다.
+     *
+     * @param member 수정할 회원 정보
+     */
     public void update(final Member member) {
         updatePassword(member.getPassword());
         updateName(member.getName());
         updatePhone(member.getPhone());
     }
 
+    /**
+     * 회원 정보를 삭제 처리 합니다.
+     */
     public void delete() {
         this.status = MemberStatus.DELETED;
     }
+
 
     private void updatePassword(final String password) {
         if (password != null && !password.isBlank()) {
@@ -110,10 +162,12 @@ public class Member extends BaseEntity {
     private void createStatus() {
         if (isUser()) {
             this.status = MemberStatus.NORMAL;
+            return;
         }
 
         if (isStore()) {
             this.status = MemberStatus.WAIT;
+            return;
         }
 
         if (isAdmin()) {
