@@ -29,7 +29,7 @@ public class LatLng {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof LatLng)) {
             return false;
         }
         LatLng latLng = (LatLng) o;
