@@ -61,7 +61,7 @@ public class Member extends BaseEntity {
 
     /**
      * 회원 타입이 일반 회원인지 확인합니다.
-     * 
+     *
      * @return 일반 회원 여부
      */
     public boolean isUser() {
@@ -70,7 +70,7 @@ public class Member extends BaseEntity {
 
     /**
      * 회원 타입이 매장 회원인지 확입합니다.
-     * 
+     *
      * @return 매장 회원 여부
      */
     public boolean isStore() {
@@ -79,7 +79,7 @@ public class Member extends BaseEntity {
 
     /**
      * 회원 타입이 관리자 회원인지 확인합니다.
-     * 
+     *
      * @return 관리자 회원 여부
      */
     public boolean isAdmin() {
@@ -88,7 +88,7 @@ public class Member extends BaseEntity {
 
     /**
      * 회원 상태가 가입 대기 상태인지 확인합니다.
-     * 
+     *
      * @return 가입 대기 상태 여부
      */
     public boolean isWaitingJoin() {
@@ -97,7 +97,7 @@ public class Member extends BaseEntity {
 
     /**
      * 회원 상태가 삭제된 상태인지 확인합니다.
-     * 
+     *
      * @return 삭제 상태 여부
      */
     public boolean isDeleted() {
@@ -180,7 +180,7 @@ public class Member extends BaseEntity {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Member)) {
             return false;
         }
         Member member = (Member) o;

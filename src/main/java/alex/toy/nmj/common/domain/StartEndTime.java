@@ -25,7 +25,7 @@ public class StartEndTime {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof StartEndTime)) {
             return false;
         }
         StartEndTime that = (StartEndTime) o;
