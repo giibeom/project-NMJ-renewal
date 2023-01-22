@@ -33,7 +33,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,12 +57,10 @@ class MemberControllerTest extends PresentationTest {
                         회원_등록_API_요청(일반_회원_gibeom)
                 );
 
-                perform.andExpect(status().isCreated());
-                perform.andExpect(content().string(not(containsString("password"))));
+                perform.andExpect(status().isCreated())
+                        .andExpect(content().string(not(containsString("password"))))
+                        .andExpect(content().string(containsString(MemberStatus.NORMAL.toString())));
                 Member_이메일_이름_전화번호_회원타입_검증(perform, 일반_회원_gibeom);
-                perform.andExpect(content().string(containsString(MemberStatus.NORMAL.toString())));
-
-                perform.andDo(print());
             }
         }
 
@@ -78,12 +75,10 @@ class MemberControllerTest extends PresentationTest {
                         회원_등록_API_요청(매장_회원_Alex)
                 );
 
-                perform.andExpect(status().isCreated());
-                perform.andExpect(content().string(not(containsString("password"))));
+                perform.andExpect(status().isCreated())
+                        .andExpect(content().string(not(containsString("password"))))
+                        .andExpect(content().string(containsString(MemberStatus.WAIT.toString())));
                 Member_이메일_이름_전화번호_회원타입_검증(perform, 매장_회원_Alex);
-                perform.andExpect(content().string(containsString(MemberStatus.WAIT.toString())));
-
-                perform.andDo(print());
             }
         }
 
@@ -226,13 +221,11 @@ class MemberControllerTest extends PresentationTest {
                         회원_수정_API_요청(기존_회원_정보.getId(), 일반_회원_beom)
                 );
 
-                perform.andExpect(status().isOk());
-                perform.andExpect(content().string(not(containsString("password"))));
-                perform.andExpect(content().string(containsString(일반_회원_gibeom.이메일())));
-                perform.andExpect(content().string(containsString(일반_회원_beom.이름())));
-                perform.andExpect(content().string(containsString(일반_회원_beom.전화번호())));
-
-                perform.andDo(print());
+                perform.andExpect(status().isOk())
+                        .andExpect(content().string(not(containsString("password"))))
+                        .andExpect(content().string(containsString(일반_회원_gibeom.이메일())))
+                        .andExpect(content().string(containsString(일반_회원_beom.이름())))
+                        .andExpect(content().string(containsString(일반_회원_beom.전화번호())));
             }
         }
 
@@ -408,8 +401,8 @@ class MemberControllerTest extends PresentationTest {
                         get(REQUEST_MEMBER_URL + "/" + 기존_회원_정보.getId())
                 );
 
-                perform.andExpect(status().isOk());
-                perform.andExpect(content().string(not(containsString("password"))));
+                perform.andExpect(status().isOk())
+                        .andExpect(content().string(not(containsString("password"))));
                 Member_이메일_이름_전화번호_회원타입_검증(perform, 일반_회원_gibeom);
             }
         }
