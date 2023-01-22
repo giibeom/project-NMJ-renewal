@@ -25,7 +25,7 @@ public class MemberControllerAdvice {
      */
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DuplicatedMemberEmailException.class)
-    public static ErrorResponse handleUserEmailIsAlreadyExisted(final DuplicatedMemberEmailException exception) {
+    public ErrorResponse handleUserEmailIsAlreadyExisted(final DuplicatedMemberEmailException exception) {
         return ErrorResponse.from(exception);
     }
 
@@ -37,7 +37,7 @@ public class MemberControllerAdvice {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(MemberNotFoundException.class)
-    public static ErrorResponse handleMemberNotFound(final MemberNotFoundException exception) {
+    public ErrorResponse handleMemberNotFound(final MemberNotFoundException exception) {
         return ErrorResponse.from(exception);
     }
 }
