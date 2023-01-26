@@ -4,7 +4,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Profile("presentation")
-@Service
+@Component
 public class DatabaseCleanup implements InitializingBean {
     @Autowired
     private DataSource dataSource;
