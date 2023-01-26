@@ -8,6 +8,16 @@
 
 <br>
 
+### 프로젝트 리뷰
+
+#### [백기선님](https://github.com/whiteship) 라이브 코드 리뷰
+- 피드백 영상 (기선님 허락 받고 편집하였습니다)
+  - https://youtu.be/aB6KyRO6l2w
+- 관련 회고
+  - [백기선님을 만나 뵈다 | Feat. 이분이라면 같이 일할만하죠 충분히...](https://velog.io/@beomdrive/%EB%B0%B1%EA%B8%B0%EC%84%A0-%EC%84%A0%EC%9E%A5%EB%8B%98%EC%97%90%EA%B2%8C-%EB%A6%AC%EB%B7%B0%EB%A5%BC-%EB%B0%9B%EC%95%84%EB%B3%B4%EB%A9%B0-feat.-%EC%98%AC%ED%95%B4-%EB%B3%B5-%EB%8B%A4-%EB%B0%9B%EC%95%98%EB%8B%A4)
+
+<br>
+
 ### Github 전략 (Git Flow)
 
 
