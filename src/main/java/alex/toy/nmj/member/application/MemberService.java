@@ -56,11 +56,6 @@ public class MemberService {
     @Transactional
     public Member update(final Long memberId, final MemberUpdateRequest memberUpdateRequest) {
         Member member = findMemberById(memberId);
-
-        if (member.isUnmodifiableMemberStatus()) {
-            throw new MemberNotFoundException();
-        }
-
         member.update(memberUpdateRequest.toEntity());
 
         return member;
@@ -74,11 +69,6 @@ public class MemberService {
     @Transactional
     public void delete(final Long memberId) {
         Member member = findMemberById(memberId);
-
-        if (member.isUndeletableMemberStatus()) {
-            throw new MemberNotFoundException();
-        }
-
         member.delete();
     }
 

@@ -1,6 +1,7 @@
 package alex.toy.nmj.member.domain;
 
 import alex.toy.nmj.common.domain.BaseEntity;
+import alex.toy.nmj.member.exception.MemberNotFoundException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -105,29 +106,15 @@ public class Member extends BaseEntity {
     }
 
     /**
-     * 회원 상태가 수정 가능한 상태인지 확인합니다.
-     *
-     * @return 수정 가능 여부
-     */
-    public boolean isUnmodifiableMemberStatus() {
-        return this.isWaitingJoin() || this.isDeleted();
-    }
-
-    /**
-     * 회원 상태가 삭제 가능한 상태인지 확인합니다.
-     *
-     * @return 삭제 가능 여부
-     */
-    public boolean isUndeletableMemberStatus() {
-        return this.isWaitingJoin() || this.isDeleted();
-    }
-
-    /**
      * 회원 정보를 수정합니다.
      *
      * @param member 수정할 회원 정보
      */
     public void update(final Member member) {
+        if (isUnmodifiableMemberStatus()) {
+            throw new MemberNotFoundException();
+        }
+
         updatePassword(member.getPassword());
         updateName(member.getName());
         updatePhone(member.getPhone());
@@ -137,9 +124,21 @@ public class Member extends BaseEntity {
      * 회원 정보를 삭제 처리 합니다.
      */
     public void delete() {
+        if (isUndeletableMemberStatus()) {
+            throw new MemberNotFoundException();
+        }
+
         this.status = MemberStatus.DELETED;
     }
 
+
+    private boolean isUnmodifiableMemberStatus() {
+        return this.isWaitingJoin() || this.isDeleted();
+    }
+
+    private boolean isUndeletableMemberStatus() {
+        return this.isWaitingJoin() || this.isDeleted();
+    }
 
     private void updatePassword(final String password) {
         if (password != null && !password.isBlank()) {
@@ -184,7 +183,12 @@ public class Member extends BaseEntity {
             return false;
         }
         Member member = (Member) o;
-        return Objects.equals(getId(), member.getId()) && Objects.equals(getEmail(), member.getEmail()) && Objects.equals(getPassword(), member.getPassword()) && Objects.equals(getName(), member.getName()) && Objects.equals(getPhone(), member.getPhone()) && getType() == member.getType() && getStatus() == member.getStatus();
+        return Objects.equals(getId(), member.getId())
+                && Objects.equals(getEmail(), member.getEmail())
+                && Objects.equals(getPassword(), member.getPassword())
+                && Objects.equals(getName(), member.getName())
+                && Objects.equals(getPhone(), member.getPhone())
+                && getType() == member.getType() && getStatus() == member.getStatus();
     }
 
     @Override
