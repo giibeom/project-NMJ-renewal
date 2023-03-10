@@ -51,6 +51,9 @@ dependencies {
 	// - Automatic Restart: claapath에 있는 파일이 변경될 때마다 애플리케이션을 자동으로 재시작해주는 기능 제공
 	// - Live Reload: 정적 자원(html, css, js) 수정 시 새로고침 없이 바로 적용되는 기능 제공
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// Guava
+	implementation 'com.google.guava:guava:31.1-jre'
 }
 
 ext {

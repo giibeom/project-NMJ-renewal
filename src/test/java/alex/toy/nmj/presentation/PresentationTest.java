@@ -1,6 +1,6 @@
 package alex.toy.nmj.presentation;
 
-import alex.toy.nmj.util.DatabaseCleanup;
+import alex.toy.nmj.util.DatabaseCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@ActiveProfiles("presentation")
+@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 class PresentationTest {
@@ -19,10 +19,10 @@ class PresentationTest {
     protected MockMvc mockMvc;
 
     @Autowired
-    private DatabaseCleanup databaseCleanup;
+    private DatabaseCleaner databaseCleaner;
 
     @BeforeEach
     public void setUp() {
-        databaseCleanup.execute();
+        databaseCleaner.execute();
     }
 }
