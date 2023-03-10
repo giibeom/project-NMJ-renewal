@@ -1,11 +1,9 @@
 plugins {
 	id 'java'
-
-	id 'org.springframework.boot' version '2.7.7'
+	id 'org.springframework.boot' version '2.7.9'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-
 	// Asciidoctor
-	id 'org.asciidoctor.convert' version '1.5.8'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'alex.toy.nmj'
@@ -13,6 +11,8 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
+	asciidoctorExt
+
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
@@ -35,30 +35,38 @@ dependencies {
 	// Spring Data Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	// Spring Boot Validation: @Valid 관련 검증 어노테이션 기능 제공
-	// 추가 이유: Spring Boot 2.3 버전부터는 spring-boot-starter-web 의존성 내부에 있던 validation이 분리됨
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
 	// Spring REST Docs: Test 코드를 통해 API 명세서를 만들어주는 기능 제공
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.5.RELEASE'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
 	// Lombok: 어노테이션을 통해 보일러플레이트 코드를 줄여주는 라이브러리
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Spring Boot Validation: @Valid 관련 검증 어노테이션 기능 제공
+	// 추가 이유: Spring Boot 2.3 버전부터는 spring-boot-starter-web 의존성 내부에 있던 validation이 분리됨
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// Spring devTool: 개발을 편리하게 할 수 있는 기능 제공
+	// - Automatic Restart: claapath에 있는 파일이 변경될 때마다 애플리케이션을 자동으로 재시작해주는 기능 제공
+	// - Live Reload: 정적 자원(html, css, js) 수정 시 새로고침 없이 바로 적용되는 기능 제공
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 ext {
-	// Test 스니펫 문서들의 저장 위치를 설정합니다
-	set('snippetsDir', file("build/generated-snippets"))
+	// 1. 테스트의 결과물(스니펫)을 저장할 경로를 지정합니다.
+	snippetsDir = file('build/generated-snippets')
 }
 
-tasks.named('test') {
-	outputs.dir snippetsDir
+test {
 	useJUnitPlatform()
+	// 2. `snippetsDir`로 설정한 디렉토리에 생성된 스니펫을 저장합니다.
+	outputs.dir snippetsDir
 }
 
-tasks.named('asciidoctor') {
+asciidoctor {
+	dependsOn test // test 실행 후 -> asciidoctor 실행 (의존)
+	configurations 'asciidoctorExt'
+	// 3. 저장된 스니펫들을 가지고 Adoc -> HTML 문서화 진행
 	inputs.dir snippetsDir
-	dependsOn test
 }
