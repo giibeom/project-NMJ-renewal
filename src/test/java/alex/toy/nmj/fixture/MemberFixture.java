@@ -1,17 +1,23 @@
 package alex.toy.nmj.fixture;
 
-import alex.toy.nmj.dto.TestMemberCreateRequestDto;
-import alex.toy.nmj.dto.TestMemberUpdateRequestDto;
 import alex.toy.nmj.member.domain.Member;
 import alex.toy.nmj.member.domain.MemberType;
 import alex.toy.nmj.member.presentation.dto.request.MemberCreateRequestDto;
+import alex.toy.nmj.member.presentation.dto.request.MemberUpdateRequestDto;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static alex.toy.nmj.fixture.FieldFixture.*;
 
 public enum MemberFixture {
     // ----- 정상 값 -----
-    일반_회원_gibeom("dev.gibeom@gmail.com", "일반77", "giibeom", "010-7777-7777", "USER"),
-    일반_회원_beom("beom@nmj.com", "오마이갓", "beom", "010-0000-0000", "USER"),
+    일반_회원_기범("dev.gibeom@gmail.com", "범쓰비밀번호77", "giibeom", "010-7777-7777", "USER"),
+    일반_회원_기범에서_이름과_전화번호_수정("dev.gibeom@gmail.com", "범쓰비밀번호77", "철수", "010-1111-1111", "USER"),
     매장_회원_Alex("kpmyung@gmail.com", "매장486", "Alex", "010-1234-5678", "STORE"),
-    관리자_회원_기범("admin@gmail.com", "관리자486", "기범관리자", "010-0707-0707", "ADMIN"),
+    매장_회원_Alex에서_이름과_전화번호_수정("kpmyung@gmail.com", "매장486", "맹구", "010-0000-0000", "STORE"),
+    관리자_회원_짱구("admin@gmail.com", "관리자486", "짱구관리자", "010-0707-0707", "ADMIN"),
     회원_타입_소문자("small.type@nmj.com", "이메일공백", "이메일공백", "010-4444-4444", "user"),
 
     // ----- 비정상 값 -----
@@ -36,43 +42,6 @@ public enum MemberFixture {
         this.type = type;
     }
 
-    public Member 엔티티_생성() {
-        return Member.builder()
-                .email(this.email)
-                .password(this.password) // TODO : 암호화 진행 (시큐리티)
-                .name(this.name)
-                .phone(this.phone)
-                .type(MemberType.valueOf(this.type))
-                .build();
-    }
-
-    public MemberCreateRequestDto 등록_요청_DTO_생성() {
-        return MemberCreateRequestDto.builder()
-                .email(this.email)
-                .password(this.password)
-                .name(this.name)
-                .phone(this.phone)
-                .type(MemberType.valueOf(this.type))
-                .build();
-    }
-
-
-    public TestMemberCreateRequestDto 등록_요청_데이터_생성() {
-        return new TestMemberCreateRequestDto(
-                this.email,
-                this.password,
-                this.name,
-                this.phone,
-                this.type);
-    }
-
-    public TestMemberUpdateRequestDto 수정_요청_데이터_생성() {
-        return new TestMemberUpdateRequestDto(
-                this.password,
-                this.name,
-                this.phone);
-    }
-
     public String 이메일() {
         return email;
     }
@@ -91,5 +60,62 @@ public enum MemberFixture {
 
     public String 회원타입() {
         return type;
+    }
+
+
+    public Map<String, String> 회원_등록_요청_데이터_생성() {
+        Map<String, String> params = new HashMap<>();
+        params.put(사용자_이메일.필드명(), 이메일());
+        params.put(사용자_비밀번호.필드명(), 비밀번호());
+        params.put(사용자_이름.필드명(), 이름());
+        params.put(사용자_전화번호.필드명(), 전화번호());
+        params.put(사용자_타입.필드명(), 회원타입());
+        return params;
+    }
+
+    public Map<String, String> 회원_수정_요청_데이터_생성() {
+        Map<String, String> params = new HashMap<>();
+        params.put(사용자_비밀번호.필드명(), 비밀번호());
+        params.put(사용자_이름.필드명(), 이름());
+        params.put(사용자_전화번호.필드명(), 전화번호());
+        return params;
+    }
+
+    public MemberCreateRequestDto 회원_등록_요청_DTO_생성() {
+        return MemberCreateRequestDto.builder()
+                .email(이메일())
+                .password(비밀번호())
+                .name(이름())
+                .phone(전화번호())
+                .type(MemberType.valueOf(회원타입()))
+                .build();
+    }
+
+    public MemberUpdateRequestDto 회원_수정_요청_DTO_생성() {
+        return MemberUpdateRequestDto.builder()
+                .password(비밀번호())
+                .name(이름())
+                .phone(전화번호())
+                .build();
+    }
+
+
+    public Member 회원_엔티티_생성() {
+        Member member = Member.builder()
+                .email(이메일())
+                .password(비밀번호())
+                .name(이름())
+                .phone(전화번호())
+                .type(MemberType.valueOf(회원타입()))
+                .build();
+
+        return member;
+    }
+
+    public Member 회원_엔티티_생성(Long id) {
+        Member member = 회원_엔티티_생성();
+        ReflectionTestUtils.setField(member, 식별자_아이디.필드명(), id);
+
+        return member;
     }
 }

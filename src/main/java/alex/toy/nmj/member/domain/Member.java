@@ -48,10 +48,23 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 15)
     private MemberStatus status;
 
+    private Member(
+            final String email, final String password, final String name,
+            final String phone, final MemberType type, final MemberStatus status
+    ) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.type = type;
+        this.status = status;
+    }
+
     @Builder
-    private Member(final Long id, final String email, final String password,
-                   final String name, final String phone, final MemberType type) {
-        this.id = id;
+    private Member(
+            final String email, final String password, final String name,
+            final String phone, final MemberType type
+    ) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -183,16 +196,11 @@ public class Member extends BaseEntity {
             return false;
         }
         Member member = (Member) o;
-        return Objects.equals(getId(), member.getId())
-                && Objects.equals(getEmail(), member.getEmail())
-                && Objects.equals(getPassword(), member.getPassword())
-                && Objects.equals(getName(), member.getName())
-                && Objects.equals(getPhone(), member.getPhone())
-                && getType() == member.getType() && getStatus() == member.getStatus();
+        return Objects.equals(getId(), member.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getEmail(), getPassword(), getName(), getPhone(), getType(), getStatus());
+        return Objects.hash(getId());
     }
 }

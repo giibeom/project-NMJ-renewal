@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 public class MemberUpdateRequestDto implements MemberUpdateRequest {
 
-    private String password;
+    private final String password;
 
-    private String name;
+    private final String name;
 
-    private String phone;
+    private final String phone;
 
     @Builder
     private MemberUpdateRequestDto(final String password, final String name, final String phone) {
