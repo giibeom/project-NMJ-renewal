@@ -1,6 +1,7 @@
 package alex.toy.nmj.member.presentation;
 
-import alex.toy.nmj.member.application.MemberService;
+import alex.toy.nmj.member.application.MemberCommandService;
+import alex.toy.nmj.member.application.MemberQueryService;
 import alex.toy.nmj.member.presentation.dto.request.MemberCreateRequestDto;
 import alex.toy.nmj.member.presentation.dto.request.MemberUpdateRequestDto;
 import alex.toy.nmj.member.presentation.dto.response.MemberCreateResponse;
@@ -23,32 +24,42 @@ import javax.validation.Valid;
 @RequestMapping("/api/members")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberCommandService memberCommandService;
+    private final MemberQueryService memberQueryService;
 
-    public MemberController(final MemberService memberService) {
-        this.memberService = memberService;
+    public MemberController(
+            final MemberCommandService memberCommandService,
+            final MemberQueryService memberQueryService
+    ) {
+        this.memberCommandService = memberCommandService;
+        this.memberQueryService = memberQueryService;
+    }
+
+
+    @GetMapping("/{memberId}")
+    MemberResponse detail(@PathVariable final Long memberId) {
+        return new MemberResponse(memberQueryService.findById(memberId));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MemberCreateResponse create(@RequestBody @Valid final MemberCreateRequestDto memberCreateRequestDto) {
-        return new MemberCreateResponse(memberService.save(memberCreateRequestDto));
+    MemberCreateResponse create(@RequestBody @Valid final MemberCreateRequestDto memberCreateRequestDto) {
+        Long memberId = memberCommandService.save(memberCreateRequestDto);
+        return new MemberCreateResponse(memberQueryService.findById(memberId));
     }
 
     @PatchMapping("/{memberId}")
-    public MemberUpdateResponse update(@PathVariable final Long memberId,
-                                       @RequestBody @Valid final MemberUpdateRequestDto memberUpdateRequestDto) {
-        return new MemberUpdateResponse(memberService.update(memberId, memberUpdateRequestDto));
+    MemberUpdateResponse update(
+            @PathVariable final Long memberId,
+            @RequestBody @Valid final MemberUpdateRequestDto memberUpdateRequestDto
+    ) {
+        memberCommandService.update(memberId, memberUpdateRequestDto);
+        return new MemberUpdateResponse(memberQueryService.findById(memberId));
     }
 
     @DeleteMapping("/{memberId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable final Long memberId) {
-        memberService.delete(memberId);
-    }
-
-    @GetMapping("/{memberId}")
-    public MemberResponse detail(@PathVariable final Long memberId) {
-        return new MemberResponse(memberService.findById(memberId));
+    void delete(@PathVariable final Long memberId) {
+        memberCommandService.delete(memberId);
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class MemberUpdateResponse {
 
     @JsonIgnore
-    private Member member;
+    private final Member member;
 
     public MemberUpdateResponse(final Member member) {
         this.member = member;

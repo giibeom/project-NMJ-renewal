@@ -12,18 +12,18 @@ import javax.validation.constraints.NotBlank;
 public class MemberCreateRequestDto implements MemberCreateRequest {
 
     @NotBlank(message = "이메일을 입력하세요")
-    private String email;
+    private final String email;
 
     @NotBlank(message = "비밀번호를 입력하세요")
-    private String password;
+    private final String password;
 
     @NotBlank(message = "이름을 입력하세요")
-    private String name;
+    private final String name;
 
     @NotBlank(message = "전화번호를 입력하세요")
-    private String phone;
+    private final String phone;
 
-    private MemberType type;
+    private final MemberType type;
 
     @Builder
     private MemberCreateRequestDto(final String email, final String password,
