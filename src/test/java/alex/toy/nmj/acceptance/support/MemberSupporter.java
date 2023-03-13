@@ -20,18 +20,21 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class MemberSupporter {
 
+    public static final String MEMBER_BASE_URL = "/api/members";
+    public static final String MEMBER_COMMAND_URL = "/api/members/{memberId}";
+
     // =========== 요청 메서드 ===========
     public static ExtractableResponse<Response> 회원_등록_요청(MemberFixture 회원_정보) {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(회원_정보.회원_등록_요청_데이터_생성())
-                .when().post("/api/members")
+                .when().post(MEMBER_BASE_URL)
                 .then().log().all().extract();
     }
 
     public static ExtractableResponse<Response> 회원_상세조회_요청(Long 회원_id) {
         return given().log().all()
-                .when().get("/api/members/{memberId}", 회원_id)
+                .when().get(MEMBER_COMMAND_URL, 회원_id)
                 .then().log().all().extract();
     }
 
@@ -39,13 +42,13 @@ public class MemberSupporter {
         return given().log().all()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(회원_정보.회원_수정_요청_데이터_생성())
-                .when().patch("/api/members/{memberId}", 수정할_회원_id)
+                .when().patch(MEMBER_COMMAND_URL, 수정할_회원_id)
                 .then().log().all().extract();
     }
 
     public static ExtractableResponse<Response> 회원_삭제_요청(Long 삭제할_회원_id) {
         return given().log().all()
-                .when().delete("/api/members/{memberId}", 삭제할_회원_id)
+                .when().delete(MEMBER_COMMAND_URL, 삭제할_회원_id)
                 .then().log().all().extract();
     }
 

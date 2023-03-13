@@ -1,5 +1,11 @@
 package alex.toy.nmj.fixture;
 
+import alex.toy.nmj.member.domain.Member;
+import alex.toy.nmj.member.domain.MemberType;
+import alex.toy.nmj.member.presentation.dto.request.MemberCreateRequestDto;
+import alex.toy.nmj.member.presentation.dto.request.MemberUpdateRequestDto;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,5 +79,43 @@ public enum MemberFixture {
         params.put(사용자_이름.필드명(), 이름());
         params.put(사용자_전화번호.필드명(), 전화번호());
         return params;
+    }
+
+    public MemberCreateRequestDto 회원_등록_요청_DTO_생성() {
+        return MemberCreateRequestDto.builder()
+                .email(이메일())
+                .password(비밀번호())
+                .name(이름())
+                .phone(전화번호())
+                .type(MemberType.valueOf(회원타입()))
+                .build();
+    }
+
+    public MemberUpdateRequestDto 회원_수정_요청_DTO_생성() {
+        return MemberUpdateRequestDto.builder()
+                .password(비밀번호())
+                .name(이름())
+                .phone(전화번호())
+                .build();
+    }
+
+
+    public Member 회원_엔티티_생성() {
+        Member member = Member.builder()
+                .email(이메일())
+                .password(비밀번호())
+                .name(이름())
+                .phone(전화번호())
+                .type(MemberType.valueOf(회원타입()))
+                .build();
+
+        return member;
+    }
+
+    public Member 회원_엔티티_생성(Long id) {
+        Member member = 회원_엔티티_생성();
+        ReflectionTestUtils.setField(member, 식별자_아이디.필드명(), id);
+
+        return member;
     }
 }
