@@ -28,6 +28,8 @@ dependencies {
 
 	// Spring Boot Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// RestAssured
+	testImplementation 'io.rest-assured:rest-assured:4.5.1'
 
 	// Spring Data JPA + H2 database
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
